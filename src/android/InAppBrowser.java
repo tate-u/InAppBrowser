@@ -79,6 +79,7 @@ public class InAppBrowser extends CordovaPlugin {
     private static final String SYSTEM = "_system";
     private static final String EXIT_EVENT = "exit";
     private static final String LOCATION = "location";
+    private static final String FILEACCESS = "fileaccess";
     private static final String ZOOM = "zoom";
     private static final String HIDDEN = "hidden";
     private static final String LOAD_START_EVENT = "loadstart";
@@ -528,9 +529,14 @@ public class InAppBrowser extends CordovaPlugin {
         showLocationBar = true;
         showZoomControls = true;
         openWindowHidden = false;
+		allowFileAccess = false;
         mediaPlaybackRequiresUserGesture = false;
 
         if (features != null) {
+			Boolean fileaccess = features.get(FILEACCESS);
+            if (fileaccess != null) {
+                allowFileAccess = fileaccess.booleanValue();
+            }
             Boolean show = features.get(LOCATION);
             if (show != null) {
                 showLocationBar = show.booleanValue();
@@ -778,8 +784,8 @@ public class InAppBrowser extends CordovaPlugin {
                 settings.setJavaScriptCanOpenWindowsAutomatically(true);
                 settings.setBuiltInZoomControls(showZoomControls);
                 settings.setPluginState(android.webkit.WebSettings.PluginState.ON);
-				settings.setAllowFileAccessFromFileURLs(true);
-				
+				settings.setAllowFileAccessFromFileURLs(allowFileAccess);
+
                 if(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR1) {
                     settings.setMediaPlaybackRequiresUserGesture(mediaPlaybackRequiresUserGesture);
                 }
